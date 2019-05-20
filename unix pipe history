@@ -1,0 +1,75 @@
+using scratch directory
+mkdir /scratch/cluster/weekly/bisiaka/
+#to make scratch directory
+module add UHTS/Analysis/sratoolkit/2.8.2.1
+fastq-dump SRR…
+#to download the data files
+module add UHTS/Quality_control/cutadapt/1.8
+#gotten from vital it website
+module add UHTS/Quality_control/fastqc/0.11.5
+cutadapt --version
+#to check version loaded
+fastqc -v
+#to check the fast is loaded
+in home directory
+curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.4.3.tar.gz -o trim_galore.tar.gz
+tar xvzf trim_galore.tar.gz
+PATH=$PATH:/home/bisiaka/TrimGalore-0.4.3
+export PATH
+#do this to use trmgalore after every login to define the path
+in scratch working directory
+trim_galore -q 20 --length 20 /scratch/cluster/weekly/bisiaka/SRR2722811_1.fastq
+#to remove the adaptor sequences
+module add UHTS/Analysis/fastx_toolkit/0.0.13.2 
+fastx_collapser -v -Q33 -i SRR…trimmed.fq 
+#to remove duplicate reads
+
+on PC terminal
+scp -r bisiaka@prd.vital-it.ch:/home/bisiaka/archive/201822trial1/  /Users/imac/Desktop/
+#to transfer from cluster to computer
+
+On R
+#select QuasR package and load the following libraries
+library(QuasR)
+library(BSgenome)
+library(Rsamtools)
+library(rtracklayer)
+library(GenomicFeatures)
+library(Gviz)
+
+on PC terminal
+Users/imac/Desktop/201822Trial1 on cluster/201822trial1/SRR2722811_2_col
+enter the directory where your fast files are located
+ls > mysamples.txt
+#to paste the contents of the working directory into the folder my samples.txt
+nano mysamples.txt
+#shows txt making field
+#don’t leave space at the top, and also space with just pressing tab once
+on R
+sampleFile <- read.table("mysamples.txt”, header=T, stringsAsFactors=F)
+#makes sample name sampleFile
+ proj =
++     qAlign(
++         sampleFile="mysamples.txt",
++         genome="BSgenome.Celegans.UCSC.ce6",
++         aligner="Rbowtie",
++         projectName="data",
++         clObj=cluObj,
++         cacheDir = "/Users/imac/Desktop/chip seq trials/201827Trial2 on cluster/Trial3/“
+)
+#then
+second time done, worked without clObj line
+qQCReport(proj, pdfFilename="QC_TDG5xC_DRIP_140717.pdf")
+qExportWig(proj, scaling=F)
+
+qExportWig(proj, binsize=100L, scaling=TRUE, collapseBySample=TRUE)
+#to export genome wig file from alignments
+
+#note that it only worked using the trimmed.fq file
+
+6/2/2018 was using wild type 1 of the series
+7/2/2018 started using lem2_cec4_1 of the series and used both samples in the QuasR
+
+
+
+
