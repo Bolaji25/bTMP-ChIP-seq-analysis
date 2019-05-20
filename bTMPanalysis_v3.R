@@ -1,4 +1,5 @@
 
+
 #setwd("~/Desktop/Bolaji")
 setwd("~/Documents/MeisterLab/otherPeopleProjects/Bolaji/TMPip_May2018")
 
@@ -8,12 +9,12 @@ library("GenomicAlignments")
 library(colorRamps)
 
 # read in list of bam filenames
-fls <- list.files(path="./bamfiles", pattern="*bam$",full.names=T,recursive = T)
-fN=3 #number of field where the fileName is found when doing strsplit (4 for bolaji, 3 for jenny)
+fls <- list.files(path="./tocomparefastafiles", pattern="*bam$",full.names=T,recursive = F)
+fN=1 #number of field where the fileName is found when doing strsplit (4 for bolaji, 3 for jenny)
 
 #make GRanges object from BSgenome (accessed with "Celegans") (i remove the mito chr)
 genomeGR<-GRanges(seqnames=seqnames(Celegans)[1:6],ranges=IRanges(start=1,
-                end=seqlengths(Celegans)[1:6]), strand="*")
+                                                                  end=seqlengths(Celegans)[1:6]), strand="*")
 
 
 #########################
@@ -23,10 +24,11 @@ genomeGR<-GRanges(seqnames=seqnames(Celegans)[1:6],ranges=IRanges(start=1,
 dir.create("./bedGraph")
 dir.create("./RDS")
 
-# normalize counts by dividing by (median coverage + 1)
-for (f in fls)
+# normalize counts by dividing by (median coverage + 8)
+for (f in fls) {
+  print(f)
   #get base of file name from current filename
-  fileName<-strsplit(strsplit(f,"/")[[1]][fN],"_")[[1]][1]
+  fileName<-strsplit(strsplit(f,"/")[[1]][3],"_")[[1]][1]
   #read in bam file
   bamFile<-readGAlignments(f)
   # calculate coverage
@@ -37,65 +39,65 @@ for (f in fls)
   medCoverage <- median(sampleCoverage+8)
   normSampleCoverage<-(sampleCoverage+8)/(medCoverage)
   # save as RDS to avoid imposing GRanges of random size
-  saveRDS(normSampleCoverage,paste0("./RDS/norm_",fileName,".RDS"))
+  saveRDS(normSampleCoverage,paste0("./RDS/norm_",fileName, ".RDS"))
+  
   
 # save as a bedgraph file in the bedgraph directory
-  export(normSampleCoverage,paste0("./bedGraph/norm_",fileName,".bedGraph"))
-
-
-
-# read files in pairs (input and IP) to calculate enrichment
-for (f in seq(1,length(fls),by=2)) #seq(1,length(fls),by=2)
-  #get base of file name from current filename
-  #fileName1<-strsplit(strsplit(fls[f],"/")[[1]][fN],"_")[[1]][1]
-  #fileName2<-strsplit(strsplit(fls[f+1],"/")[[1]][fN],"_")[[1]][1]
-  input<-readRDS(paste0("./RDS/norm_CInputcollapsed", ".RDS") )
-  chip<-readRDS(paste0("./RDS/norm_DIPcollapsed", ".RDS") )
-  #calculate enrichment
-  enrichment<- log2 (chip/input)
-  enrichment
-  saveRDS(enrichment,paste0("./RDS/enrichment", ".RDS"))
-  export(enrichment,paste0("./bedGraph/enrichment", ".bedGraph"))
-
-
-
-# get a list of all the files with the enrichment data
- normCountsFiles<-list.files(path="./bedGraph/",pattern="enrichment.*bedGraph")
-
-#create GRangesList object with different sized tiles along genome
- tile1Mb<-unlist(tile(x=genomeGR,width=1000000))
- tile100kb<-unlist(tile(x=genomeGR,width=100000))
- tile10kb<-unlist(tile(x=genomeGR,width=10000))
- tile1kb<-unlist(tile(x=genomeGR,width=1000))
- tile100bp<-unlist(tile(x=genomeGR,width=100))
- tileList<-list("tile1Mb"=tile1Mb,"tile100kb"=tile100kb,"tile10kb"=tile10kb,"tile1kb"=tile1kb,"tile100bp"=tile100bp)
-
-
-# read in the bedgraph files in pairs to calculate enrichment counts at different scales
-for (f in normCountsFiles) {
-  #get normalised counts
-  normCounts<-import(paste0("./bedGraph/"),format="bedGraph")
-  sampleName=strsplit(strsplit(f,split=".bedGraph",fixed=T)[[1]],split="enrichment")[[1]][2]
-
-  for (i in 1:length(tileList)) {
-    #make a GRangesList from GRanges
-    tiles<-split(tileList[[i]],seqnames(tileList[[i]]))
-
-    # convert GRanges back to coverage
-    rle<-coverage(normCounts,weight="score")
-
-    #create views corresponding to the tiles on the coverage rle and average counts
-    summedCov<-viewMeans(RleViewsList(rangesList=tiles,rleList = rle))
-
-    #now save the values into tiles
-    mcols(tileList[[i]])[,sampleName]<-unlist(summedCov)
-  }
+  export(normSampleCoverage,paste0("./bedGraph/norm_",fileName, ".bedGraph"))
 }
 
 
+# read files in pairs (input and IP) to calculate enrichment
+for (f in seq(1,length(fls),by=2)) {seq(1,length(fls),by=2)
+  #get base of file name from current filename
+  fileName1<-strsplit(strsplit(fls[f],"/")[[1]][3],"_")[[1]][1]
+  fileName2<-strsplit(strsplit(fls[f+1],"/")[[1]][3],"_")[[1]][1]
+  #fileName3<-strsplit(strsplit(fls[f+2],"/")[[1]][fN],"_")[[1]][1]
+  input<-readRDS(paste0("./RDS/norm_", fileName2, ".RDS"))
+  chip<-readRDS(paste0("./RDS/norm_", fileName1, ".RDS"))
+  #chip2<-readRDS(paste0("./RDS/norm_",fileName3, ".RDS"))
+  #calculate enrichment
+  enrichment<- log2(chip/input)
+  saveRDS(enrichment,paste0("./RDS/enrichment", fileName2, ".RDS"))
+  export(enrichment,paste0("./bedGraph/enrichment", fileName2, ".bedGraph"))
+}
+
+# get a list of all the files with the enrichment data
+normCountsFiles<-list.files(path="./bedGraph/",pattern="enrichment*.bedGraph")
+
+#create GRangesList object with different sized tiles along genome
+tile1Mb<-unlist(tile(x=genomeGR,width=1000000))
+tile100kb<-unlist(tile(x=genomeGR,width=100000))
+tile10kb<-unlist(tile(x=genomeGR,width=10000))
+tile1kb<-unlist(tile(x=genomeGR,width=1000))
+tile100bp<-unlist(tile(x=genomeGR,width=100))
+tileList<-list("tile1Mb"=tile1Mb,"tile100kb"=tile100kb,"tile10kb"=tile10kb,"tile1kb"=tile1kb,"tile100bp"=tile100bp)
+
+
+# read in the bedgraph files in pairs to calculate enrichment counts at different scales
+#for (f in normCountsFiles) {
+#get normalised counts
+normCounts<-import(paste0("./bedGraph/enrichment*.bedGraph"),format="bedGraph")
+sampleName=strsplit(strsplit(f,split=".bedGraph",fixed=T)[[1]],split="enrichment")[[1]][2]
+#sampleName="enrichment"
+
+for (i in 1:length(tileList)) {
+  #make a GRangesList from GRanges
+  tiles<-split(tileList[[i]],seqnames(tileList[[i]]))
+  
+  # convert GRanges back to coverage
+  rle<-coverage(normCounts,weight="score")
+  
+  #create views corresponding to the tiles on the coverage rle and average counts
+  summedCov<-viewMeans(RleViewsList(rangesList=tiles,rleList = rle))
+  
+  #now save the values into tiles
+  mcols(tileList[[i]])[,sampleName]<-unlist(summedCov)
+}
+#}
 
 ## plot box plots by chromosome for all data sets at each tile size
-pdf("boxplots_chr.pdf",paper="a4r",width=11,height=8)
+pdf("enrichment*.pdf",paper="a4r",width=11,height=8)
 par(mfrow=c(2,2))
 for (i in 1:length(tileList)) {
   tiles<-tileList[[i]]
@@ -121,8 +123,8 @@ for (i in 1:length(tileList)) {
   for (s1 in samples) {
     for (s2 in samples) {
       #if (s1!=s2) {
-        myCor<-round(cor(mcols(tiles)[,s1],mcols(tiles)[,s2],use="pairwise.complete.obs"),2)
-        smoothScatter(mcols(tiles)[,s1],mcols(tiles)[,s2],colramp=matlab.like,
+      myCor<-round(cor(mcols(tiles)[,s1],mcols(tiles)[,s2],use="pairwise.complete.obs"),2)
+      smoothScatter(mcols(tiles)[,s1],mcols(tiles)[,s2],colramp=matlab.like,
                     main=paste0(s1," vs ",s2," ",names(tileList)[i]," (R=",myCor,")"),
                     xlab=s2,ylab=s1,cex.main=0.9)
       #}
@@ -158,37 +160,39 @@ formatWinSize<-function(winSize) {
   return(units)
 }
 
-#sizes of windows you want to create
+#sizes of windows you want to create, (e means raised to the power of)
 winWidths<-c(10,100,1000,1e4,1e5,5e5)
 #create create list of GRanges with sliding windows of different sizes
 winList<-makeWinList(genomeGR,winWidths)
 
 # get a list of all the files with the enrichment data
-normCountsFiles<-list.files(path="./bedGraph/",pattern="enrich_.*bedGraph")
+normCountsFiles<-list.files(path="./",pattern="enrichment*.bedGraph")
 
 
 # read in the bedgraph files in pairs to calculate enrichment counts at different scales
-for (f in normCountsFiles) {
-  #get normalised counts
-  normCounts<-import(paste0("./bedGraph/",f),format="bedGraph")
-  sampleName=strsplit(strsplit(f,split=".bedGraph",fixed=T)[[1]],split="enrich_")[[1]][2]
+#for (f in normCountsFiles) {
+#get normalised counts
+normCounts<-import(paste0("./bedGraph/",f),format="bedGraph")
+normCounts<-import("enrichment.bedGraph", format="bedGraph")
+#sampleName=strsplit(strsplit(f,split=".bedGraph",fixed=T)[[1]],split="enrich_")[[1]][2]
+sampleName="enrichment"
 
-  for (i in 1:length(winList)) {
-    #make a GRangesList from GRanges
-    windows<-split(winList[[i]],seqnames(winList[[i]]))
-
-    # convert GRanges back to coverage
-    rle<-coverage(normCounts,weight="score")
-
-    #create views corresponding to the windows on the coverage rle and average counts
-    summedCov<-viewMeans(RleViewsList(rangesList=windows,rleList = rle))
-
-    #now save the values into windows
-    windows<-unlist(windows)
-    mcols(windows)$score<-unlist(summedCov)
-    windows<-resize(windows,width=1,fix="center")
-    export(windows,paste0("./bedGraph/smEnrich_",sampleName,"_",names(winList)[i],".bedGraph"))
-  }
+for (i in 1:length(winList)) {
+  #make a GRangesList from GRanges
+  windows<-split(winList[[i]],seqnames(winList[[i]]))
+  
+  # convert GRanges back to coverage
+  rle<-coverage(normCounts,weight="score")
+  
+  #create views corresponding to the windows on the coverage rle and average counts
+  summedCov<-viewMeans(RleViewsList(rangesList=windows,rleList = rle))
+  
+  #now save the values into windows
+  windows<-unlist(windows)
+  mcols(windows)$score<-unlist(summedCov)
+  windows<-resize(windows,width=1,fix="center")
+  export(windows,paste0("./bedGraph/smEnrich_",sampleName,"_",names(winList)[i],".bedGraph"))
+}
 }
 
 
