@@ -1,3 +1,4 @@
+
 #install bioconductor package
 source("http://bioconductor.org/biocLite.R")
 biocLite(c('methods','IRanges','BSgenome','digest','Rsamtools','rtracklayer','GenomicRanges','Biostrings'))
@@ -35,5 +36,3 @@ for (f in seq(1,length(fls),by=2)) {
   BEADS<-beads(chip, input, mappabilitytrack, ref_fa, uniq = TRUE,mapq_cutoff = 20L, rdata = FALSE, export_er = TRUE, ...)
   export(BEADS,paste0("./alignedBWA/normalizedwbeads/beads_",fileName1,".bw")
 }
-
-
