@@ -16,7 +16,7 @@ proj =
 qQCReport(proj, pdfFilename="tocompare2.pdf")
 
 qExportWig(proj, scaling=F)
-qExportWig(proj, binsize=100L, scaling=TRUE, collapseBySample=TRUE)
+qExportWig(proj, binsize=1L, scaling=TRUE, collapseBySample=TRUE)
 #to align using QuasR
 #to create pdf of the q
 
