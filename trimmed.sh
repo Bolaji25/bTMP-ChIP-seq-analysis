@@ -30,13 +30,13 @@ module add UHTS/Analysis/bamtools/2.4.1;
 curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
 tar xvzf trim_galore.tar.gz
 # Run Trim Galore
-./TrimGalore-0.6.5/trim_galore
+#./TrimGalore-0.6.5/trim_galore
 
 mkdir ./trimmed/
 
 #gunzip ../rawData/masters/*.fastq.gz 
 fastqc /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/masters/*.fastq -o ./qc/
-trim_galore -q 20 /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/masters/*.fastq -o ./trimmed/
+./TrimGalore-0.6.5/trim_galore -q 20 --length 20 /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/masters/*.fastq -o ./trimmed/
 fastqc ./trimmed/*.fq -o ./qc/
 
 # get index for list of samples
