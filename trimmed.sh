@@ -33,6 +33,7 @@ tar xvzf trim_galore.tar.gz
 #export PATH
 # Run Trim Galore
 #./TrimGalore-0.6.5/trim_galore
+<<<<<<< HEAD
 
 #mkdir ./trimmedreseq/
 #mkdir ./qcreseq/
@@ -42,7 +43,16 @@ tar xvzf trim_galore.tar.gz
 #the clip is to clip off 50bp from the 100bp reads to make it similar to the previous, omit this option for 50bp read length reads
 ./TrimGalore-0.6.5/trim_galore -q 20 --three_prime_clip_R1 50  /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/reseq2020110/*.fastq -o ./trimmedreseq/
 fastqc ./trimmedreseq/*.fq -o ./qcreseq/
+=======
+>>>>>>> 6f2caaba3c69056b5792f9f308f50e4efd73f3ca
 
 
+<<<<<<< HEAD
+=======
+#gunzip ../rawData/masters/*.fastq.gz 
+fastqc /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/masters/*.fastq -o ./qc/
+./TrimGalore-0.6.5/trim_galore -q 20 --length 20 /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/masters/*.fastq -o ./trimmed/
+fastqc ./trimmed/*.fq -o ./qc/
+>>>>>>> 6f2caaba3c69056b5792f9f308f50e4efd73f3ca
 
 
