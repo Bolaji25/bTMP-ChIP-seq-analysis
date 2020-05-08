@@ -1,8 +1,8 @@
 #! /usr/bin/bash
 
 ## Allocate resources
-#SBATCH --time=0-24:00:00
-#SBATCH --array=1-7
+#SBATCH --time=0-5:00:00
+#SBATCH --array=2,6,8
 
 #SBATCH --mail-user=bolaji.isiaka@izb.unibe.ch
 #SBATCH --mail-type=end,fail
@@ -21,7 +21,7 @@ module add UHTS/Analysis/sambamba/0.7.1;
 
 
 # read in the run specific settings
-sampleName=(bFlp1IP bFlp2IP bFlp2ipt bN2not1IP bN2not2IP bTrp1input bTrp1IP)
+sampleName=( bFlp1IP bFlp1ipt bFlp2IP bFlp2ipt bN2not1IP bN2no1Inpt bN2not2IP bN2no2Inpt bTrp1input bTrp1IP)
 
 # get index for list of samples
 let i=$SLURM_ARRAY_TASK_ID-1
