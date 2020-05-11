@@ -6,7 +6,7 @@
 
 #SBATCH --mail-user=bolaji.isiaka@izb.unibe.ch
 #SBATCH --mail-type=end,fail
-#SBATCH --job-name="remdup"
+#SBATCH --job-name="removeduplicates"
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=all
 #SBATCH --mem-per-cpu=8G
@@ -17,7 +17,6 @@ module add UHTS/Quality_control/fastqc/0.11.7;
 #module load gcc/6.2.0
 module add UHTS/Aligner/bowtie2/2.3.1;
 module add UHTS/Analysis/samtools/1.10;
-module add UHTS/Analysis/sambamba/0.7.1;
 
 
 # read in the run specific settings

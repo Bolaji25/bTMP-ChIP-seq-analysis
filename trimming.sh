@@ -32,13 +32,14 @@ tar xvzf trim_galore.tar.gz
 # Run Trim Galore
 #./TrimGalore-0.6.5/trim_galore
 
-mkdir ../scripts/reseq/trimmedreseq
-mkdir ../scripts/reseq/qcreseq
+mkdir ./trimmed2020110
+mkdir ./qc2020110
 
 #gunzip ../rawData/masters/*.fastq.gz 
 #fastqc /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/reseq2020110/*.fastq -o ./qc/
-./TrimGalore-0.6.5/trim_galore -q 20 ---three_prime_clip_R1 50 /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/reseq2020110/*.fastq -o ./trimmedreseq/
-fastqc ../scripts/reseq/trimmedreseq -o .../scripts/reseq/qcreseq/
+#./TrimGalore-0.6.5/trim_galore -q 20 --three_prime_clip_R1 50 /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/reseq2020110/*.fastq -o ./trimmedreseq
+#./TrimGalore-0.6.5/trim_galore -q 20 /home/ubelix/izb/bi18k694/PhD_analysis/supercoiling/analysis/rawData/2020110/*.fastq -o ./trimmed2020110
+fastqc ./trimmed2020110/*.fq -o ./qc2020110
 
 # get index for list of samples
 #let i=$SLURM_ARRAY_TASK_ID-1
