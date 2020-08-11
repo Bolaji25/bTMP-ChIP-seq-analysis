@@ -115,16 +115,16 @@ for (f in 1:length(Datafiles)) {
 
 
 #to make correlations without ordering based on similariies of correlation
-#Mb1Tile<- ggcorr(as.data.frame(mcols(tileList[[1]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("1Mbtilesize")
-#bp100Tile<- ggcorr(as.data.frame(mcols(tileList[[5]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("100bptilesize")
-#bp50Tile<- ggcorr(as.data.frame(mcols(tileList[[6]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("50ptilesize")
-#bp10Tile<- ggcorr(as.data.frame(mcols(tileList[[7]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("10bptilesize")
-#bp10Tileperas<- ggcorr(as.data.frame(mcols(tileList[[7]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7)+ggtitle("10bptilesize")
-#kb10Tile<- ggcorr(as.data.frame(mcols(tileList[[3]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("10kbtilesize")
-#kb100Tile<- ggcorr(as.data.frame(mcols(tileList[[2]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("100kbtilesize")
-#kb1Tile<- ggcorr(as.data.frame(mcols(tileList[[4]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("1kbtilesize")
-#correlations<-grid.arrange(bp50Tile,bp10Tile, ncol=1, nrow=2)
-#ggsave("correlationspage4.pdf", plot =correlations)
+Mb1Tile<- ggcorr(as.data.frame(mcols(tileList[[1]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("1Mbtilesize")
+bp100Tile<- ggcorr(as.data.frame(mcols(tileList[[5]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("100bptilesize")
+bp50Tile<- ggcorr(as.data.frame(mcols(tileList[[6]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("50ptilesize")
+bp10Tile<- ggcorr(as.data.frame(mcols(tileList[[7]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("10bptilesize")
+bp10Tileperas<- ggcorr(as.data.frame(mcols(tileList[[7]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7)+ggtitle("10bptilesize")
+kb10Tile<- ggcorr(as.data.frame(mcols(tileList[[3]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("10kbtilesize")
+kb100Tile<- ggcorr(as.data.frame(mcols(tileList[[2]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("100kbtilesize")
+kb1Tile<- ggcorr(as.data.frame(mcols(tileList[[4]])),label=T,hjust = 1, size = 5, color = "black", layout.exp = 7, method= c("everything","spearman"))+ggtitle("1kbtilesize")
+correlations<-grid.arrange(bp50Tile,bp10Tile, ncol=1, nrow=2)
+ggsave("correlationspage4.pdf", plot =correlations)
 
 
 
